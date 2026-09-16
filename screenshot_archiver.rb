@@ -7,7 +7,7 @@
 # browse them.
 #
 # Usage:
-#   # SerpApi's API feature pages share no path prefix, scope by regex:
+#   # SerpApi's API landing pages share no path prefix, scope by regex:
 #   SCOPE_PATTERN='-api$' MAX_PAGES=10 bundle exec ruby screenshot_archiver.rb https://serpapi.com/
 #
 #   # Or scope by path prefix (only URLs under /docs/ are followed):

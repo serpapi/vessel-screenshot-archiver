@@ -1,9 +1,8 @@
-# Website screenshot archiver
+# Vessel website screenshot archiver
 
-Companion example for the blog post "Vessel 0.3: Ruby finally gets its Scrapy", showing the Ferrum driver running real Chrome. It crawls a site with [Vessel](https://github.com/rubycdp/vessel), renders every
-page in headless Chrome, and saves a full-page screenshot per page plus an
-`index.html` contact sheet. Useful as a visual archive before a redesign, for
-eyeballing a whole site at once, or for visual regression checks.
+A Vessel 0.3 example showing the Ferrum driver running real Chrome. It crawls a site with [Vessel](https://github.com/rubycdp/vessel), renders every page in headless Chrome, and saves a full-page screenshot per page plus an `index.html` contact sheet. Useful as a visual archive before a redesign, for eyeballing a whole site at once, or for visual regression checks.
+
+Check out the accompanying [Vessel 0.3: Ruby finally gets its Scrapy](https://serpapi.com/blog/vessel-ruby-crawling-framework/) post.
 
 ## Requirements
 
@@ -17,8 +16,8 @@ Here's the basic usage:
 ```ruby
 bundle install
 
-# Screenshot SerpApi's API feature pages (they share no path prefix,
-# so scope by regex instead of by path):
+# Screenshot SerpApi's API landing pages (they live at the root of the
+# domain with no shared path prefix, so scope by regex instead of by path):
 SCOPE_PATTERN='-api$' MAX_PAGES=10 bundle exec ruby screenshot_archiver.rb https://serpapi.com/
 
 # Or scope by path prefix (only URLs under /docs/ are followed):
