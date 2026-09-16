@@ -1,10 +1,6 @@
-# Screenshot archiver (Vessel 0.3 + Chrome example)
+# Website screenshot archiver
 
-Companion example for the blog post "Vessel 0.3: Ruby finally gets its Scrapy",
-showing the Ferrum (real Chrome) driver. See `../vessel-ruby-crawling/` for the
-plain-HTTP Mechanize example.
-
-Crawls a site scoped to the start URL's host and path prefix, renders every
+Companion example for the blog post "Vessel 0.3: Ruby finally gets its Scrapy", showing the Ferrum driver running real Chrome. It crawls a site with [Vessel](https://github.com/rubycdp/vessel), renders every
 page in headless Chrome, and saves a full-page screenshot per page plus an
 `index.html` contact sheet. Useful as a visual archive before a redesign, for
 eyeballing a whole site at once, or for visual regression checks.
@@ -16,22 +12,24 @@ macOS; otherwise it must be in `PATH`).
 
 ## Usage
 
-```
+Here's the basic usage:
+
+```ruby
 bundle install
 
 # Screenshot SerpApi's API feature pages (they share no path prefix,
 # so scope by regex instead of by path):
 SCOPE_PATTERN='-api$' MAX_PAGES=10 bundle exec ruby screenshot_archiver.rb https://serpapi.com/
 
-# Or scope by path prefix, like the crosslink mapper example:
-bundle exec ruby screenshot_archiver.rb https://serpapi.com/blog/
+# Or scope by path prefix (only URLs under /docs/ are followed):
+bundle exec ruby screenshot_archiver.rb https://example.com/docs/
 
 open shots/index.html
 ```
 
 Options via environment variables:
 
-```
+```ruby
 SCOPE_PATTERN='-api$' MAX_PAGES=10 THREADS=2 SHOTS_DIR=shots bundle exec ruby screenshot_archiver.rb https://serpapi.com/
 ```
 
@@ -43,10 +41,14 @@ SCOPE_PATTERN='-api$' MAX_PAGES=10 THREADS=2 SHOTS_DIR=shots bundle exec ruby sc
 
 ## Output
 
+Script will save output to `shots/` by default:
+
 - `shots/<page-slug>.png` — full-page screenshot per crawled page
 - `shots/index.html` — contact sheet with all screenshots, titles, and links
 
-## What it demonstrates that Mechanize can't
+## Vessel vs Mechanize
+
+Here's the advantage of Vessel 0.3 compared to Mechanize:
 
 - `page` inside a handler is the raw `Ferrum::Page`: the script scrolls to the
   bottom so lazy-loaded images render, scrolls back, and calls
@@ -64,5 +66,7 @@ SCOPE_PATTERN='-api$' MAX_PAGES=10 THREADS=2 SHOTS_DIR=shots bundle exec ruby sc
   hits a texture size limit) and very long captures can exceed the timeout.
   The script falls back to a viewport screenshot for those pages and logs a
   warning.
-- URL scoping and normalization match the crosslink mapper example: fragments
-  and query strings stripped, trailing slashes dropped, assets skipped.
+- URL scoping keeps the crawl on the start URL's host, and either under its
+  path prefix (default) or matching `SCOPE_PATTERN`. URLs are normalized
+  (fragments and query strings stripped, trailing slashes dropped) and asset
+  URLs (images, CSS, feeds, ...) are skipped.

@@ -1,15 +1,17 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Crawls a site (scoped to the start URL's host and path prefix) with a real
-# Chrome via Vessel's Ferrum driver and saves a full-page screenshot of every
-# page, plus an index.html contact sheet to browse them.
+# Crawls a site (scoped to the start URL's host, and its path prefix or a
+# SCOPE_PATTERN regex) with a real Chrome via Vessel's Ferrum driver and saves
+# a full-page screenshot of every page, plus an index.html contact sheet to
+# browse them.
 #
 # Usage:
-#   bundle exec ruby screenshot_archiver.rb https://serpapi.com/blog/
-#
-#   # SerpApi's feature pages share no path prefix, scope by regex instead:
+#   # SerpApi's API feature pages share no path prefix, scope by regex:
 #   SCOPE_PATTERN='-api$' MAX_PAGES=10 bundle exec ruby screenshot_archiver.rb https://serpapi.com/
+#
+#   # Or scope by path prefix (only URLs under /docs/ are followed):
+#   bundle exec ruby screenshot_archiver.rb https://example.com/docs/
 #
 # Requires Chrome or Chromium (the Ferrum driver finds it automatically).
 #
@@ -39,7 +41,7 @@ module Urls
   module_function
 
   # Strip fragments and query strings, drop trailing slashes so that
-  # /blog and /blog/ count as one page.
+  # /docs and /docs/ count as one page.
   def normalize(url)
     uri = URI(url.to_s)
     return nil unless %w[http https].include?(uri.scheme)
